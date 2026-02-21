@@ -1,5 +1,9 @@
 # GSheetCharacterExporter
 
+## Text Rules
+
+**ASCII only for punctuation.** Never use em dashes (`U+2014`), en dashes (`U+2013`), curly/smart double quotes (`U+201C`, `U+201D`), or curly/smart single quotes (`U+2018`, `U+2019`). Use the plain keyboard equivalents: `-`, `"`, `'`. This applies to all files - code, documentation, comments, strings, and markup.
+
 ## What This Is
 A single self-contained HTML file (`index.html`) that exports D&D 5e character sheet data from a public Google Sheet into Markdown or JSON, suitable for pasting into LLMs.
 
@@ -9,17 +13,17 @@ A single self-contained HTML file (`index.html`) that exports D&D 5e character s
 - Uses the **Google Sheets direct CSV export** endpoint via `fetch()`
 - URL format: `https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={GID}`
 - The sheet MUST be public (Share -> Anyone with the link -> Viewer)
-- **Requires HTTP origin** — must be served from a web server, not opened as `file://` (CORS restriction)
+- **Requires HTTP origin** - must be served from a web server, not opened as `file://` (CORS restriction)
 
 ### Multi-Tab Architecture
 The tool fetches data from up to **4 tabs** per spreadsheet:
 
 | Tab | Purpose | Discovery |
 |-----|---------|-----------|
-| **First tab** (main) | Main character sheet — stats, abilities, skills, spells, etc. | Always uses the first tab |
+| **First tab** (main) | Main character sheet - stats, abilities, skills, spells, etc. | Always uses the first tab |
 | **Additional** | Extended attacks, extra cantrips/spells, multiclass info, resistances/immunities/vulnerabilities | Found by name in discovered tabs |
 | **Inventory** | Currency, wealth/weight, full item list | Found by name in discovered tabs |
-| **Spell Preparation** | Source of truth for spells — replaces main/Additional spell data when present | Found by name in discovered tabs |
+| **Spell Preparation** | Source of truth for spells - replaces main/Additional spell data when present | Found by name in discovered tabs |
 
 **Tabs NOT processed** (backend/reference data used by sheet formulas):
 - `?`, `Attack Info`, `Gear Info`, `Race Info`, `Class Info`
@@ -38,20 +42,20 @@ Auto-detected inventory tabs are extracted as `extraInventories` and rendered as
 The tool originally used the Google Visualization API (gviz) with JSONP, but we switched to direct CSV export because:
 - **gviz has a critical bug**: an empty cell gap in col 2 combined with data in col 28 corrupts the entire response
 - **gviz can't read merged cells**: Speed, Inspiration, Weight, Hair, odd-level spell slots, and skill proficiency markers (◉) all returned null
-- **CSV export reads everything**: all merged cells, all proficiency markers, all spell slots — no limitations
+- **CSV export reads everything**: all merged cells, all proficiency markers, all spell slots - no limitations
 - **Trade-off**: CSV export requires HTTP origin (can't run from `file://`), which is acceptable since the user has a server
 
 ### Data Format
 - CSV is parsed with a custom RFC 4180 parser (`parseCSV()`) that handles quoted fields, commas within quotes, and escaped double-quotes
 - The parser produces a simple 2D string array: `rows[row][col]`
 - Row 0 = CSV row 1, Col 0 = column A
-- **CSV row indices differ from gviz indices** — varying offsets (+1 to +16 depending on section)
+- **CSV row indices differ from gviz indices** - varying offsets (+1 to +16 depending on section)
 
 ### Parsing Strategy
 - **Position-map based**: each template version has a hardcoded map of [row, col] positions for every field
 - **Template detection**: check cell `[1,19]` for template identifier (e.g. "Gsheet 4.0")
-- Falls back to v4.0 layout if no template detected — may produce wrong data for incompatible sheets
-- No searching or scanning — every field is read directly from its known position
+- Falls back to v4.0 layout if no template detected - may produce wrong data for incompatible sheets
+- No searching or scanning - every field is read directly from its known position
 - To add a new template, create a new position map object
 
 ### Output Formats
@@ -73,7 +77,7 @@ After tab discovery, a pill-style bar appears below the status bar showing all d
 - Tooltips describe each tab's role (e.g., "Extended attacks, spells, multiclass, defenses")
 - Auto-detected custom tabs show their detected type in the tooltip (e.g., "Inventory container (auto-detected)")
 
-## v4.0 Layout — Complete Position Map (CSV)
+## v4.0 Layout - Complete Position Map (CSV)
 
 All positions verified against marker sheet CSV export AND real test sheet CSV export.
 Row/Col are 0-indexed from the raw CSV output.
@@ -141,7 +145,7 @@ Proficiency/expertise detection (◉ marker + math for expertise vs proficient):
 | Rows | Col 17 | Col 24 | Col 28 |
 |------|--------|--------|--------|
 | 31-35 | Attack Name | Attack Bonus | Damage/Type |
-| 36-41 | Additional Attacks (text only) | — | — |
+| 36-41 | Additional Attacks (text only) | - | - |
 
 ### Languages, Equipment, Proficiencies
 | Section | Col | Rows | Notes |
@@ -220,9 +224,9 @@ This distinguishes e.g. Warlock spells (◉) from item-granted spells like Ring 
 | Appearance Image URL | 175 | 2 |
 | Symbol Image URL | 175 | 8 |
 
-## v1.4 Layout — Position Map Differences
+## v1.4 Layout - Position Map Differences
 
-The v1.4 template (public-domain "D&D 5e Gsheet v1.4") shares most positions with v4.0. Only the differences are listed here — all other fields use the same positions as v4.0.
+The v1.4 template (public-domain "D&D 5e Gsheet v1.4") shares most positions with v4.0. Only the differences are listed here - all other fields use the same positions as v4.0.
 
 ### Template Detection
 | Field | Row | Col | Notes |
@@ -285,7 +289,7 @@ The v1.4 Additional tab is nearly identical to v4.0's. Differences:
 
 ### Tab Expectations (v1.4)
 - Has an **Additional** tab (with layout differences noted above)
-- **No separate Inventory tab** — inventory is on the main sheet (set to null in template)
+- **No separate Inventory tab** - inventory is on the main sheet (set to null in template)
 - If custom tabs matching Inventory structure are found, auto-detection still handles them
 
 ## Spell Preparation Tab
@@ -369,9 +373,9 @@ When no spell prep (main/Additional fallback):
 
 ### Markdown Table Rules
 - Tables with column headers (Combat Stats, Skills, Attacks, Spells, Proficiencies) have a proper header row
-- Tables used as key-value pairs (Basic Info, Personality/Physical) use `**bold**` labels in the first column — no column header row
+- Tables used as key-value pairs (Basic Info, Personality/Physical) use `**bold**` labels in the first column - no column header row
 - The separator row (`|---|---|`) goes after the first row
-- Empty headers (`| | |`) break markdown rendering — never use them
+- Empty headers (`| | |`) break markdown rendering - never use them
 
 ### Preview Rendering
 - Built-in markdown-to-HTML renderer (`mdToHTML()`) handles headings, tables, lists, bold/italic
@@ -394,10 +398,10 @@ Examples of tasks that should always run locally:
 ## Development Notes
 
 ### DO NOT
-- Filter out MARKER text from output — markers are temporary test data the user needs to see for verification
-- Use landmark/search-based field finding — use the position map directly
-- Spawn expensive subagents for debugging — use simple direct approaches
-- Assume cells are empty because they're merged — CSV export reads all merged cells
+- Filter out MARKER text from output - markers are temporary test data the user needs to see for verification
+- Use landmark/search-based field finding - use the position map directly
+- Spawn expensive subagents for debugging - use simple direct approaches
+- Assume cells are empty because they're merged - CSV export reads all merged cells
 
 ### DO
 - ASK the user questions instead of burning tokens guessing
@@ -410,7 +414,7 @@ Examples of tasks that should always run locally:
 ### Potential Base Ability Scores
 The row below each ability score (e.g., STR score at [14,2], potential base at [15,2]) may contain the
 base/unmodified score. On Nyx's sheet, CON score is 19 (Amulet of Health) but the row below shows 11.
-All other abilities match their current scores (no items modifying them). Not yet extracted — needs
+All other abilities match their current scores (no items modifying them). Not yet extracted - needs
 further investigation.
 
 ### Character Name
@@ -418,4 +422,4 @@ CSV export reads the character name directly from the sheet (no longer needs a m
 The name input workaround was removed after switching from gviz to CSV.
 
 ### Historical Note: gviz vs CSV Position Offsets
-When we switched from gviz to CSV export, all row indices changed. The offsets are NOT uniform — they vary by section (+1 to +16). The CSV position map was built by downloading the marker sheet as CSV and parsing it with Python. Never mix gviz positions with CSV positions.
+When we switched from gviz to CSV export, all row indices changed. The offsets are NOT uniform - they vary by section (+1 to +16). The CSV position map was built by downloading the marker sheet as CSV and parsing it with Python. Never mix gviz positions with CSV positions.

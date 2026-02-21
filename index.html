@@ -496,7 +496,7 @@ const TAB_INFO = {
   'Spell Preparation': 'Spell preparation management'
 };
 const IGNORED_TABS = new Set(['?', 'Attack Info', 'Gear Info', 'Race Info', 'Class Info']);
-const IGNORED_TOOLTIP = 'Internal sheet data — not processed';
+const IGNORED_TOOLTIP = 'Internal sheet data - not processed';
 
 // Detect if an unknown tab matches a known structure by checking row 1 headers
 function detectTabType(rows) {
@@ -681,7 +681,7 @@ async function loadCharacterData(parsed) {
   let template = detectTemplate(mainRows);
   if (!template) {
     template = TEMPLATES.dnd_5e_v40;
-    setStatus('Unknown template — using default v4.0 layout as fallback. Some fields may be wrong.', 'loading');
+    setStatus('Unknown template - using default v4.0 layout as fallback. Some fields may be wrong.', 'loading');
   }
 
   setStatus('Fetching extra sheets...', 'loading');
@@ -709,7 +709,7 @@ async function fetchSheet() {
     renderOutput();
     setStatus(`Exported "${characterData.name || 'character'}" successfully!`, 'success');
   } catch (err) {
-    setStatus('Fetch failed: ' + err.message + ' — Make sure the sheet is public and this page is served via HTTP.', 'error');
+    setStatus('Fetch failed: ' + err.message + ' - Make sure the sheet is public and this page is served via HTTP.', 'error');
   } finally {
     fetchBtn.disabled = false;
   }
@@ -729,8 +729,8 @@ function cellNum(rows, r, c) {
 
 // Escape a string for use inside a markdown table cell
 function mdEsc(v) {
-  if (!v) return '—';
-  return v.replace(/\|/g, ' — ').replace(/\n/g, ' ').trim();
+  if (!v) return '-';
+  return v.replace(/\|/g, ' - ').replace(/\n/g, ' ').trim();
 }
 
 // ── Extraction Helpers ──
@@ -822,7 +822,7 @@ const TEMPLATES = {
     profBonus:         [13, 7],
     passivePerception: [44, 2],
 
-    // Abilities: [key, scoreRow, modRow] — all at col 2
+    // Abilities: [key, scoreRow, modRow] - all at col 2
     abilities: [
       ["STR", 14, 12],
       ["DEX", 19, 17],
@@ -1137,7 +1137,7 @@ function extract(rows, map) {
   d.profBonus = cell(rows, ...map.profBonus);
   d.passivePerception = cell(rows, ...map.passivePerception);
 
-  // Ability Scores — map entries are [key, scoreRow, modRow], all at col 2
+  // Ability Scores - map entries are [key, scoreRow, modRow], all at col 2
   const profBonusNum = parseInt(d.profBonus) || 0;
   d.abilities = [];
   for (const [key, scoreRow, modRow] of map.abilities) {
@@ -1148,7 +1148,7 @@ function extract(rows, map) {
     });
   }
 
-  // Saving Throws — ◉ = proficient, 〇 = not
+  // Saving Throws - ◉ = proficient, 〇 = not
   const sv = map.saves;
   d.saves = [];
   for (let r = sv.rows[0]; r <= sv.rows[1]; r++) {
@@ -1162,7 +1162,7 @@ function extract(rows, map) {
     });
   }
 
-  // Skills — ◉ marker readable; use math to distinguish Proficient vs Expertise
+  // Skills - ◉ marker readable; use math to distinguish Proficient vs Expertise
   const sk = map.skills;
   d.skills = [];
   for (let r = sk.rows[0]; r <= sk.rows[1]; r++) {
@@ -1205,7 +1205,7 @@ function extract(rows, map) {
     }
   }
 
-  // Proficiencies — reads labels from sheet
+  // Proficiencies - reads labels from sheet
   const pr = map.proficiencies;
   d.proficiencies = [];
   if (pr.inline) {
@@ -1240,7 +1240,7 @@ function extract(rows, map) {
   d.bonds = readPersonality(pers.bonds);
   d.flaws = readPersonality(pers.flaws);
 
-  // Features & Traits — read column by column (left, middle, right) to preserve grouping
+  // Features & Traits - read column by column (left, middle, right) to preserve grouping
   const ft = map.features;
   d.features = [];
   for (const c of ft.cols) {
@@ -1256,7 +1256,7 @@ function extract(rows, map) {
     attackBonus: cell(rows, ...sc.attackBonus)
   };
 
-  // Cantrips — always store as {name} objects
+  // Cantrips - always store as {name} objects
   d.cantrips = scanGrid(rows, map.cantrips.rows[0], map.cantrips.rows[1], map.cantrips.cols).map(name => ({ name }));
 
   // Leveled Spells
@@ -1317,7 +1317,7 @@ function extractAdditional(d, rows, map) {
     d.additionalCantrips = addCantrips;
   }
 
-  // Extended Leveled Spells — merge into existing spells
+  // Extended Leveled Spells - merge into existing spells
   mergeSpells(d.spells, scanSpells(rows, map.spells));
 
   // Multiclass Info
@@ -1436,7 +1436,7 @@ function extractInventory(d, rows, map) {
   d.maxWeight = cell(rows, ...map.maxWeight);
   d.currentWeight = cell(rows, ...map.weight);
 
-  // Items — merge left then right into one flat list, skip empties
+  // Items - merge left then right into one flat list, skip empties
   const items = map.items;
   d.inventory = [];
   for (const side of [items.left, items.right]) {
@@ -1502,7 +1502,7 @@ function mdToHTML(md) {
       continue;
     }
 
-    // Table separator row — skip it
+    // Table separator row - skip it
     if (/^\|[\s:_-]+\|/.test(line) && !line.match(/[a-zA-Z0-9]/)) {
       continue;
     }
@@ -1605,10 +1605,10 @@ function renderCombatStats(d) {
   let md = `## Combat Stats\n`;
   md += `| AC | HP | Initiative | Speed | Prof Bonus | Hit Dice |\n`;
   md += `|:--:|:--:|:----------:|:-----:|:----------:|:--------:|\n`;
-  md += `| ${d.ac || '—'} | ${d.hpMax || '—'} | ${d.initiative || '—'} | ${d.speed || '—'} | ${d.profBonus || '—'} | ${d.hitDice || '—'} |\n\n`;
+  md += `| ${d.ac || '-'} | ${d.hpMax || '-'} | ${d.initiative || '-'} | ${d.speed || '-'} | ${d.profBonus || '-'} | ${d.hitDice || '-'} |\n\n`;
 
   if (d.currentHp || d.tempHp || d.condition) {
-    md += `**Current HP:** ${d.currentHp || '—'}`;
+    md += `**Current HP:** ${d.currentHp || '-'}`;
     if (d.tempHp) md += ` | **Temp HP:** ${d.tempHp}`;
     if (d.condition) md += ` | **Condition:** ${d.condition}`;
     md += '\n\n';
@@ -1759,11 +1759,11 @@ const SECTIONS = [
     type: 'kv_table',
     rows: d => {
       const rows = [
-        ['**Race**', d.race || '—'],
-        ['**Class**', d.classLevel || '—'],
-        ['**Background**', d.background || '—'],
-        ['**Alignment**', d.alignment || '—'],
-        ['**Player**', d.player || '—']
+        ['**Race**', d.race || '-'],
+        ['**Class**', d.classLevel || '-'],
+        ['**Background**', d.background || '-'],
+        ['**Alignment**', d.alignment || '-'],
+        ['**Player**', d.player || '-']
       ];
       if (d.totalLevel) rows.push(['**Total Level**', d.totalLevel]);
       return rows;
@@ -1811,8 +1811,8 @@ const SECTIONS = [
     show: d => d.abilities.length > 0,
     columns: [
       { header: 'Ability', sep: '---------', value: a => a.key },
-      { header: 'Score', sep: ':-----:', value: a => a.score || '—' },
-      { header: 'Modifier', sep: ':--------:', value: a => a.modifier || '—' }
+      { header: 'Score', sep: ':-----:', value: a => a.score || '-' },
+      { header: 'Modifier', sep: ':--------:', value: a => a.modifier || '-' }
     ],
     data: d => d.abilities
   },
@@ -1824,7 +1824,7 @@ const SECTIONS = [
     show: d => d.saves.length > 0,
     columns: [
       { header: 'Ability', sep: '---------', value: s => s.name },
-      { header: 'Modifier', sep: ':--------:', value: s => s.modifier || '—' },
+      { header: 'Modifier', sep: ':--------:', value: s => s.modifier || '-' },
       { header: 'Proficient', sep: ':----------:', value: s => s.proficient ? 'Yes' : '' }
     ],
     data: d => d.saves
@@ -1837,7 +1837,7 @@ const SECTIONS = [
     show: d => d.skills.length > 0,
     columns: [
       { header: 'Skill', sep: '-------', value: s => s.name },
-      { header: 'Modifier', sep: ':--------:', value: s => s.modifier || '—' },
+      { header: 'Modifier', sep: ':--------:', value: s => s.modifier || '-' },
       { header: 'Proficient', sep: ':----------:', value: s => s.proficiency ? 'Yes' : '' },
       { header: 'Expert', sep: ':------:', value: s => s.proficiency === 'Expertise' ? 'Yes' : '' }
     ],

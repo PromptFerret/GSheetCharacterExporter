@@ -1,6 +1,6 @@
 # GSheetCharacterExporter
 
-Export D&D 5e character sheet data from a public Google Sheet into clean Markdown or JSON, ready for pasting into LLMs. No server, no accounts — runs entirely in your browser.
+Export D&D 5e character sheet data from a public Google Sheet into clean Markdown or JSON, ready for pasting into LLMs. No server, no accounts - runs entirely in your browser.
 
 **Live:** [promptferret.github.io/GSheetCharacterExporter](https://promptferret.github.io/GSheetCharacterExporter/)
 
@@ -11,7 +11,7 @@ Export D&D 5e character sheet data from a public Google Sheet into clean Markdow
 3. Parses all character data using a position map matched to the sheet template
 4. Outputs clean Markdown or structured JSON
 
-The output is optimized for pasting into AI tools — Claude, ChatGPT, or any LLM that benefits from structured character data.
+The output is optimized for pasting into AI tools - Claude, ChatGPT, or any LLM that benefits from structured character data.
 
 ## Supported Sheet Templates
 
@@ -32,13 +32,13 @@ The tool reads the template version from a marker cell and uses the correct posi
 ## Requirements
 
 - The Google Sheet **must be public** (Share → Anyone with the link → Viewer)
-- The tool **requires HTTP** — must be served from a web server, not opened as `file://` (CORS restriction on Google Sheets API)
+- The tool **requires HTTP** - must be served from a web server, not opened as `file://` (CORS restriction on Google Sheets API)
 
 ## Getting Started
 
 ### Use it online
 
-Visit [promptferret.github.io/GSheetCharacterExporter](https://promptferret.github.io/GSheetCharacterExporter/) — nothing to install.
+Visit [promptferret.github.io/GSheetCharacterExporter](https://promptferret.github.io/GSheetCharacterExporter/) - nothing to install.
 
 ### Run locally
 
@@ -60,13 +60,13 @@ Copy `index.html` to any web server or static hosting that serves over HTTP/HTTP
 
 ## How It Works
 
-The tool uses Google Sheets' direct CSV export endpoint (`/export?format=csv&gid=...`) to fetch raw cell data. Each template version has a hardcoded position map — every field is read from a known [row, col] coordinate. No scanning or searching.
+The tool uses Google Sheets' direct CSV export endpoint (`/export?format=csv&gid=...`) to fetch raw cell data. Each template version has a hardcoded position map - every field is read from a known [row, col] coordinate. No scanning or searching.
 
 Tab discovery uses the `/htmlview` endpoint to find tab names and GIDs, then fetches additional tabs in parallel.
 
 ## Contributing
 
-Single HTML file — no build step, no package manager. Edit `index.html` and refresh.
+Single HTML file - no build step, no package manager. Edit `index.html` and refresh.
 
 1. Fork the repo
 2. Make your changes to `index.html`
@@ -81,10 +81,10 @@ To support a new sheet template, create a new position map object following the 
 
 ## License
 
-[MIT License](LICENSE) — Copyright (c) 2026 PromptFerret
+[MIT License](LICENSE) - Copyright (c) 2026 PromptFerret
 
 ## Links
 
-- [D&D 5e GSheet v1.4](https://docs.google.com/spreadsheets/d/1etrBJ0qCDXACovYHUM4XvjE0erndThwRLcUQzX6ts8w/edit?gid=1750226729#gid=1750226729) — compatible public-domain character sheet template
+- [D&D 5e GSheet v1.4](https://docs.google.com/spreadsheets/d/1etrBJ0qCDXACovYHUM4XvjE0erndThwRLcUQzX6ts8w/edit?gid=1750226729#gid=1750226729) - compatible public-domain character sheet template
 - [All PromptFerret Tools](https://promptferret.github.io/tools/)
 - [PromptFerret](https://promptferret.github.io)
