@@ -1,4 +1,4 @@
-# GSheet D&D Character Exporter
+# GSheetCharacterExporter
 
 Export D&D 5e character sheet data from a public Google Sheet into clean Markdown or JSON, ready for pasting into LLMs. No server, no accounts — runs entirely in your browser.
 

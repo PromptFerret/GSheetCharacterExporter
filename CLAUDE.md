@@ -1,4 +1,4 @@
-# GSheet D&D Character Exporter
+# GSheetCharacterExporter
 
 ## What This Is
 A single self-contained HTML file (`index.html`) that exports D&D 5e character sheet data from a public Google Sheet into Markdown or JSON, suitable for pasting into LLMs.
